@@ -58,10 +58,9 @@ public class LexicalAnalyzer {
 	public void SyntaxAnalyzer() throws AnalyzerException {
 		removeAuxiliary(result);
 		if(s.validateCFG(result)) {
-			System.out.println("true");
+			System.out.println("BUILD SUCCESSFULLY");
 		}else {
-			System.out.println("false");
-
+			System.out.println("BUILD FAIL");
 		}
 		
 	}

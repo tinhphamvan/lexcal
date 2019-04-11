@@ -1,1 +1,1 @@
-program a ( tt , a a );
+program a ( tt , a);

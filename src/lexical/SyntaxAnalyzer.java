@@ -12,16 +12,25 @@ public class SyntaxAnalyzer {
 	}
 	
 	public boolean validateCFG(List<Token> result) throws AnalyzerException{
+		if(startProgram(result, index)) {
+			if(block(result, index)) {
+				//tiep tuc
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	
+	//Bat dau chuong trinh bang PROGRAM
+	public boolean startProgram(List<Token> result, int index) {
 		if(isWord(result.get(index),TokenType.PROGRAMnumber)) {
 			index ++;
 			if(isWord(result.get(index),TokenType.IDnumber)) {
 				index ++;
 				if(isWord(result.get(index),TokenType.LPARENnumber  )) {
 					index ++;
-					//is list
-					
 					if(isListIDnumber(result,index)) {
-//						System.out.println(index);
 						return true;
 					}
 				}else if (isWord(result.get(index),TokenType.SEMInumber)){// ;
@@ -32,65 +41,58 @@ public class SyntaxAnalyzer {
 		}
 		return false;
 	}
+	
+	//check list hay 1 element
 	public boolean isListIDnumber(List<Token> result, int index) {
-		System.out.println("bat dau ham isList");
-		System.out.println(index);
 		if(isWord(result.get(index),TokenType.IDnumber)) {
-			System.out.println("vua check identifier");
 			index++;
 			if(isWord(result.get(index),TokenType.COMMMAnumber)) {//,
-				System.out.println("vua check ,");
 				index++;	
 				if(isListIDnumber(result,index)){
 					return true;
 				}			
 			} else if(isWord(result.get(index),TokenType.RPARENnumber)) {
-				System.out.println("vua check dau )");	
 				return true;
 			}else {
-				System.out.println("vao false dau tien");
 				return false;
-			
 			}
-			
 		}
-		System.out.println("het");
 		return false;
 		
-		/*if(isWord(result.get(index),TokenType.RPARENnumber)){
-			return true;
-		}
-		
-		if(isWord(result.get(index),TokenType.COMMMAnumber)){
-			index ++;
-			if(!isWord(result.get(index),TokenType.IDnumber)){
-				return false;
-			}
-		}
-		if(isWord(result.get(index),TokenType.IDnumber)){
-			index ++;
-			if(!isWord(result.get(index),TokenType.COMMMAnumber) ){
-				System.out.println("1");
-				return false;
-			}
-			if(!isWord(result.get(index),TokenType.RPARENnumber)) {
-				System.out.println("het");
-				return false;
-			}
-		}
-		if(isWord(result.get(result.size()),TokenType.RPARENnumber)) {
-			
-			return false;
-		}
-		return isListIDnumber(result, index + 1);*/
-		
 	}
-//	public void print(List<Token> result) throws AnalyzerException{
-//		for(int i = 0; i < result.size(); i++) {
-//            System.out.println(result.get(i).getTokenString());
-//        }
-//	}
 
+	
+	//Comment here
+	public boolean block(List<Token> result, int index) {
+		//code here
+		return false;
+	}
+	
+	//Comment here
+	public boolean statement(List<Token> result, int index) {
+		//code here
+		return false;
+	}
+	
+	//Comment here
+	public boolean unsignedConstant(List<Token> result, int index) {
+		//code here
+		return false;
+	}
+	
+	//Comment here
+	public boolean expression(List<Token> result, int index) {
+		//code here
+		return false;
+	}
+	
+	//Comment here
+	public boolean simpleExpression(List<Token> result, int index) {
+		//code here
+		return false;
+	}
+	
+	//Kiem tra tu dung voi TokenType hay khong
 	public boolean isWord(Token token, TokenType dataType) {
 		if(token.tokenType == dataType ){
 			return true;
