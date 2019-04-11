@@ -33,23 +33,31 @@ public class SyntaxAnalyzer {
 		return false;
 	}
 	public boolean isListIDnumber(List<Token> result, int index) {
-//		System.out.println(index);
-//		if(isWord(result.get(index),TokenType.IDnumber)) {
-//			index++;
-//			if(isWord(result.get(index),TokenType.COMMMAnumber)) {//,
-//				index++;	
-//				isListIDnumber(result,index);			
-//			} 
-//			if(isWord(result.get(index),TokenType.RPARENnumber)) {
-//				System.out.println("adasd");	
-//				return true;
-//			}
-//			
-//		}
-//		System.out.println("het");
-//		return false;
+		System.out.println("bat dau ham isList");
+		System.out.println(index);
+		if(isWord(result.get(index),TokenType.IDnumber)) {
+			System.out.println("vua check identifier");
+			index++;
+			if(isWord(result.get(index),TokenType.COMMMAnumber)) {//,
+				System.out.println("vua check ,");
+				index++;	
+				if(isListIDnumber(result,index)){
+					return true;
+				}			
+			} else if(isWord(result.get(index),TokenType.RPARENnumber)) {
+				System.out.println("vua check dau )");	
+				return true;
+			}else {
+				System.out.println("vao false dau tien");
+				return false;
+			
+			}
+			
+		}
+		System.out.println("het");
+		return false;
 		
-		if(isWord(result.get(index),TokenType.RPARENnumber)){
+		/*if(isWord(result.get(index),TokenType.RPARENnumber)){
 			return true;
 		}
 		
@@ -74,7 +82,7 @@ public class SyntaxAnalyzer {
 			
 			return false;
 		}
-		return isListIDnumber(result, index + 1);
+		return isListIDnumber(result, index + 1);*/
 		
 	}
 //	public void print(List<Token> result) throws AnalyzerException{
