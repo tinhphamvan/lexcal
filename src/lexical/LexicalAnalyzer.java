@@ -39,9 +39,31 @@ public class LexicalAnalyzer {
 				System.out.println(result.get(i).toString());
 		}
 	}
+	
+	// remove some token not use
+	public void removeAuxiliary(List<Token> result) {
+		//TokenType tokenType = new TokenType();
+		for(int i=0;i<result.size();i++){
+			if (result.get(i).getTokenType() == TokenType.BLANKnumber ||
+					result.get(i).getTokenType() == TokenType.TABnumber )
+			{
+				result.remove(i);
+			}
+				//System.out.println(result.get(i).toString());
+		}
+	}
+	
+	
 	SyntaxAnalyzer s = new SyntaxAnalyzer();
 	public void SyntaxAnalyzer() throws AnalyzerException {
-		s.validateCFG(result);
+		removeAuxiliary(result);
+		if(s.validateCFG(result)) {
+			System.out.println("true");
+		}else {
+			System.out.println("false");
+
+		}
+		
 	}
 	
 	public boolean getCommentSupport() {

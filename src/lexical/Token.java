@@ -18,7 +18,7 @@ public class Token {
 	private int endIndex;
 	private int lineEnd;	
 	private boolean isComment;
-	private TokenType tokenType;
+	public  TokenType tokenType;
 	private String tokenString;
 
 	
