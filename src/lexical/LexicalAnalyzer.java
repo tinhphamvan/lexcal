@@ -39,6 +39,10 @@ public class LexicalAnalyzer {
 				System.out.println(result.get(i).toString());
 		}
 	}
+	SyntaxAnalyzer s = new SyntaxAnalyzer();
+	public void SyntaxAnalyzer() throws AnalyzerException {
+		s.validateCFG(result);
+	}
 	
 	public boolean getCommentSupport() {
 		return isCommentsSupport;

@@ -32,7 +32,8 @@ public class Main {
         if(n.getCommentSupport() == true) {
 			throw new AnalyzerException("Comments that are never terminated # "+ n.getPriviousToken().getBeginIndex() + " line # " + n.getPriviousToken().getLineBegin(), n.getPriviousToken().getEndIndex(), n.getPriviousToken().getLineBegin());
 		}
-		n.display();
+//		n.display();
+		n.SyntaxAnalyzer();
 	}
 
 }
