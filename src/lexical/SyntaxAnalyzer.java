@@ -5,36 +5,38 @@ import java.util.List;
 import lexical.LexicalAnalyzer;
 
 public class SyntaxAnalyzer {
-	int index = 0;
+	static int index = 0;
 	//TokenType tokenType = new TokenType();
 	public SyntaxAnalyzer(){
 		
 	}
 	
 	public boolean validateCFG(List<Token> result) throws AnalyzerException{
-		if(startProgram(result, index)) {
-			if(block(result, index)) {
+		System.out.println(this.index);
+		if(startProgram(result, this.index)) {
+			System.out.println(this.index);
+//			if(block(result, this.index)) {
 				//tiep tuc
 				return true;
-			}
-			
+//			}
 		}
 		return false;
 	}
 	
 	//Bat dau chuong trinh bang PROGRAM
 	public boolean startProgram(List<Token> result, int index) {
-		if(isWord(result.get(index),TokenType.PROGRAMnumber)) {
-			index ++;
-			if(isWord(result.get(index),TokenType.IDnumber)) {
-				index ++;
-				if(isWord(result.get(index),TokenType.LPARENnumber  )) {
-					index ++;
-					if(isListIDnumber(result,index)) {
+		if(isWord(result.get(this.index),TokenType.PROGRAMnumber)) {
+			this.index ++;
+			if(isWord(result.get(this.index),TokenType.IDnumber)) {
+				this.index ++;
+				if(isWord(result.get(this.index),TokenType.LPARENnumber  )) {
+					this.index ++;
+					if(isListIDnumber(result,this.index)) {
 						return true;
 					}
-				}else if (isWord(result.get(index),TokenType.SEMInumber)){// ;
-					index++;
+				}else if (isWord(result.get(this.index),TokenType.SEMInumber)){// ;
+					this.index++;
+					System.out.println(134);
 					return true;
 				}
 			}
@@ -44,27 +46,27 @@ public class SyntaxAnalyzer {
 	
 	//check list hay 1 element
 	public boolean isListIDnumber(List<Token> result, int index) {
-		if(isWord(result.get(index),TokenType.IDnumber)) {
-			index++;
-			if(isWord(result.get(index),TokenType.COMMMAnumber)) {//,
-				index++;	
-				if(isListIDnumber(result,index)){
+		if(isWord(result.get(this.index),TokenType.IDnumber)) {
+			this.index++;
+			if(isWord(result.get(this.index),TokenType.COMMMAnumber)) {//,
+				this.index++;	
+				if(isListIDnumber(result,this.index)){
 					return true;
 				}			
-			} else if(isWord(result.get(index),TokenType.RPARENnumber)) {
+			} else if(isWord(result.get(this.index),TokenType.RPARENnumber)) {
 				return true;
 			}else {
 				return false;
 			}
 		}
-		return false;
-		
+		return false;	
 	}
 
 	
 	//Comment here
 	public boolean block(List<Token> result, int index) {
 		//code here
+		System.out.println(this.index);
 		return false;
 	}
 	
@@ -92,7 +94,7 @@ public class SyntaxAnalyzer {
 		return false;
 	}
 	
-	//Kiem tra tu dung voi TokenType hay khong
+	//Kiem tra tu dung voi TokenType hay khong?
 	public boolean isWord(Token token, TokenType dataType) {
 		if(token.tokenType == dataType ){
 			return true;
