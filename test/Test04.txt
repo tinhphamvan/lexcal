@@ -1,1 +1,2 @@
-program a ( tt, hf, fi ,iuf );
+program a (a, a a);
+var a;

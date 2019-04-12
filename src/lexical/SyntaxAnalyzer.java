@@ -14,11 +14,10 @@ public class SyntaxAnalyzer {
 	public boolean validateCFG(List<Token> result) throws AnalyzerException{
 		System.out.println(this.index);
 		if(startProgram(result, this.index)) {
-			System.out.println(this.index);
-//			if(block(result, this.index)) {
+			if(block(result, this.index)) {
 				//tiep tuc
 				return true;
-//			}
+			}
 		}
 		return false;
 	}
@@ -27,16 +26,30 @@ public class SyntaxAnalyzer {
 	public boolean startProgram(List<Token> result, int index) {
 		if(isWord(result.get(this.index),TokenType.PROGRAMnumber)) {
 			this.index ++;
+			// program name
 			if(isWord(result.get(this.index),TokenType.IDnumber)) {
 				this.index ++;
+				//gap (
 				if(isWord(result.get(this.index),TokenType.LPARENnumber  )) {
+					System.out.println("gap (");
 					this.index ++;
-					if(isListIDnumber(result,this.index)) {
-						return true;
+					// gap list ID
+					if(isListIDnumber2(result,this.index)) {
+						this.index ++;
+						System.out.println("chay xong isList ben ngoai");
+						if(isWord(result.get(this.index),TokenType.RPARENnumber  )) {
+							System.out.println("gap )");
+							this.index++;
+						}else {
+							return false;
+						}
+						//return true;
+					}else {
+						return false;}
 					}
-				}else if (isWord(result.get(this.index),TokenType.SEMInumber)){// ;
+				if (isWord(result.get(this.index),TokenType.SEMInumber)){// ;
 					this.index++;
-					System.out.println(134);
+					System.out.println("gap ;");
 					return true;
 				}
 			}
@@ -47,13 +60,17 @@ public class SyntaxAnalyzer {
 	//check list hay 1 element
 	public boolean isListIDnumber(List<Token> result, int index) {
 		if(isWord(result.get(this.index),TokenType.IDnumber)) {
+			System.out.println("gap bien");
 			this.index++;
 			if(isWord(result.get(this.index),TokenType.COMMMAnumber)) {//,
+				System.out.println("gap ,");
 				this.index++;	
 				if(isListIDnumber(result,this.index)){
 					return true;
 				}			
 			} else if(isWord(result.get(this.index),TokenType.RPARENnumber)) {
+				this.index++;
+				System.out.println("gap ) ");
 				return true;
 			}else {
 				return false;
@@ -61,12 +78,41 @@ public class SyntaxAnalyzer {
 		}
 		return false;	
 	}
+	public boolean isListIDnumber2(List<Token> result, int index) {
+		System.out.println("bat dau ham isList voi index = "+this.index);
+		if(isWord(result.get(this.index),TokenType.IDnumber)&&isWord(result.get(this.index + 1),TokenType.COMMMAnumber)) {
+			
+			System.out.println(this.index);
+			System.out.println("gap bien");
+			this.index++;
+			this.index++;
+			return isListIDnumber2(result,this.index);
+			 
+		}
+//		if(isWord(result.get(this.index),TokenType.RPARENnumber)) {//dieu kien dung
+//			System.out.println("gap ) va index = "+this.index);
+//			return true;
+//		}
+		System.out.println("ket thuc ham list voi index = "+this.index);
+		return true;	
+	}
 
 	
 	//Comment here
 	public boolean block(List<Token> result, int index) {
+		System.out.println("vao block voi index ="+this.index);
 		//code here
-		System.out.println(this.index);
+		if(isWord(result.get(this.index),TokenType.VARnumber)) {
+			this.index++;
+			if(isWord(result.get(this.index),TokenType.IDnumber)) {
+				this.index++;
+				return true;
+//				if gap , => goi isList()
+//				else if gap : => gap type => gap ; => goi isList
+//				else false
+			}
+		}
+		
 		return false;
 	}
 	
