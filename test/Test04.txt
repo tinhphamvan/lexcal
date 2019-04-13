@@ -1,16 +1,8 @@
-program Progarm1;
-var       
-    num1, num2, sum : Integer;
+program HelloWorld;
+var a,b :integer;
 begin
-	sum := num1 + num2;
-	writeln(sum);
-end.
-
-program const_circle (input,output);
-r, d, c : real;   {variable declaration: radius, dia, circumference}
-begin
-   readln(r);
-   d := 2 * r;
-   c :=  PI * d;
-   writeln('The circumference of the circle is ',c:7:2);
+	b:=10;
+    a:=5;
+    c:= a+b;
+    writeln(c);
 end.
