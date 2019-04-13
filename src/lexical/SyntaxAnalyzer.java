@@ -14,16 +14,37 @@ public class SyntaxAnalyzer {
 	public boolean validateCFG(List<Token> result) throws AnalyzerException{
 		System.out.println(this.index);
 		if(startProgram(result, this.index)) {
-			if(block(result, this.index)) {
-				//tiep tuc
-				return true;
-			}
+//			if(block(result, this.index)) {
+//				//tiep tuc
+//				return true;
+//			}
+			return true;
 		}
+		
 		return false;
 	}
 	
 	//Bat dau chuong trinh bang PROGRAM
 	public boolean startProgram(List<Token> result, int index) {
+		if (isProgram(result,this.index)) {
+			this.index++;
+			if (isIdent(result,this.index)){
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	public boolean isIdent(List<Token> result, int index) {
+		return false;
+	}
+	public boolean isIdentList(List<Token> result, int index) {
+		return false;
+	}
+	public boolean name(List<Token> result, int index) {
+		return false;
+	}
+	public boolean isProgram(List<Token> result, int index) {
 		if(isWord(result.get(this.index),TokenType.PROGRAMnumber)) {
 			this.index ++;
 			// program name
@@ -56,7 +77,6 @@ public class SyntaxAnalyzer {
 		}
 		return false;
 	}
-	
 	//check list hay 1 element
 	public boolean isListIDnumber(List<Token> result, int index) {
 		if(isWord(result.get(this.index),TokenType.IDnumber)) {
@@ -102,9 +122,17 @@ public class SyntaxAnalyzer {
 	public boolean block(List<Token> result, int index) {
 		System.out.println("vao block voi index ="+this.index);
 		//code here
+		isVar(result,index);
+		
+		return false;
+	}
+	public boolean isVar(List<Token> result, int index){
 		if(isWord(result.get(this.index),TokenType.VARnumber)) {
+			System.out.println("gap var");
 			this.index++;
+			System.out.println("index:"+result.get(index+1).tokenString+this.index);
 			if(isWord(result.get(this.index),TokenType.IDnumber)) {
+				System.out.println("gap bien");
 				this.index++;
 				return true;
 //				if gap , => goi isList()
@@ -112,7 +140,6 @@ public class SyntaxAnalyzer {
 //				else false
 			}
 		}
-		
 		return false;
 	}
 	

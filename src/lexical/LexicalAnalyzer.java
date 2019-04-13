@@ -44,9 +44,12 @@ public class LexicalAnalyzer {
 	public void removeAuxiliary(List<Token> result) {
 		//TokenType tokenType = new TokenType();
 		for(int i=0;i<result.size();i++){
-			if (result.get(i).getTokenType() == TokenType.BLANKnumber ||
-					result.get(i).getTokenType() == TokenType.TABnumber )
+			if (result.get(i).getTokenType() == TokenType.BLANKnumber
+					 )
 			{
+				result.remove(i);
+			}
+			if(result.get(i).getTokenType() == TokenType.TABnumber){
 				result.remove(i);
 			}
 				//System.out.println(result.get(i).toString());
