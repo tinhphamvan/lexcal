@@ -10,7 +10,7 @@ public class SyntaxAnalyzer {
 	int index = 0;
 	List<Token> result;
 	List<String> variable = new ArrayList<String>();
-
+	TreeProperty tree = new TreeProperty();
 	public SyntaxAnalyzer(){
 		
 	}
@@ -27,12 +27,15 @@ public class SyntaxAnalyzer {
 		
 		///check progarm
 		if (getType(this.index)==TokenType.PROGRAMnumber.toString()) {
+//			tree.setProgram()
+
 			if(isProgram()) {
 				this.index++;
 				//check declare
 				if(getType(this.index)==TokenType.VARnumber.toString()){
 					this.index++;
 					if(isVar()) {
+						tree.setDeclare(variable);
 						this.index++;
 					}else {
 						System.out.println("false");
@@ -204,6 +207,7 @@ public class SyntaxAnalyzer {
 			
 			// program name (IDnumber)
 			if(getType(this.index)==TokenType.IDnumber.toString()) {
+				tree.setProgram(getValue(this.index)); //get program name
 				this.index ++;
 				
 				//match ; => break

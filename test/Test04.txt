@@ -1,6 +1,6 @@
 program HelloWorld;
 var  a , b,c : string;
 begin
-	a:=4;
+	a:= 'hello world';
 	a:=a+b;
 end.

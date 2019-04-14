@@ -13,7 +13,7 @@ public class LexicalAnalyzer {
 
 	/** Mapping from type of token to its regular expression */
 	private Map<TokenType, String> regEx;
-
+	
 	/** List of tokens as they appear in the input source */
 	private List<Token> result;
 	
@@ -245,7 +245,7 @@ public class LexicalAnalyzer {
 		regEx.put(TokenType.NEnumber, "(<>).*");				//Test
 		regEx.put(TokenType.IDnumber, "\\b([a-zA-Z_][a-zA-Z0-9_-]*)\\b.*"); //Test
 		regEx.put(TokenType.DCONSTnumber, "\\b(\\d{1,9}\\.\\d{1,32})\\b.*");// double constant
-		
+		regEx.put(TokenType.CCONSTnumber, "(\'([^\"]*)\').*");
 		//regEx.put(TokenType.CCONSTnumber, "\\b('\\d{1}')\\b.*");//char constant
 		//regEx.put(TokenType.SCONSTnumber, "\\b([a-z]+)\\b.*");// string constant
 		regEx.put(TokenType.ICONSTnumber, "\\b(\\d{1,9})\\b.*");

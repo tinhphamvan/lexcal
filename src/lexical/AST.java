@@ -15,25 +15,12 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AST extends JFrame implements ActionListener {
-//    private class tokendent {
-//        private int id;
-//        private String hoten;
-//        private String ngaysinh;
-//        private float diemTB;
-//        private int sotinchi;
-//
-//
-//        public tokendent(int id, String hoten, String ngaysinh, float diemTB, int sotinchi) {
-//            this.id = id;
-//            this.hoten = hoten;
-//            this.ngaysinh = ngaysinh;
-//            this.diemTB = diemTB;
-//            this.sotinchi = sotinchi;
-//        }
-//    }
+  
     private class Node {
         private Token token;
         private Node left, right, parent;
