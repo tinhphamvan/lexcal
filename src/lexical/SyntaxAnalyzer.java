@@ -129,7 +129,6 @@ public class SyntaxAnalyzer {
 				//match :=
 				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
 					this.index++;
-
 					// check: match IDnumber2 and it is declared
 					// or match a number
 					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
@@ -158,6 +157,49 @@ public class SyntaxAnalyzer {
 					}
 				}
 			}
+			//check for string variable
+			if(variable.get(variable.size()-1).toLowerCase().equals("string")) {
+				//match :=
+				System.out.println("gap");
+				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
+					this.index++;
+					System.out.println("gap");
+					// check: match IDnumber2 and it is declared
+					// or match a number
+					System.out.println(getValue(this.index));
+					System.out.println(getType(this.index));
+					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.CCONSTnumber.toString()) {
+						this.index++;
+						System.out.println("gap");
+						//match ; => break
+						if(getType(this.index)==TokenType.SEMInumber.toString()) {
+							return true;
+						}
+						// for a:= a + b;
+						//match +-*/
+						else if(getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.MINUSnumber.toString() || getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.TIMESnumber.toString() ) {
+							this.index++;
+							//match IDnumber or number 
+							if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.CCONSTnumber.toString()) {
+								this.index++;
+								
+								//match ; => break
+								if(getType(this.index)==TokenType.SEMInumber.toString()) {
+									return true;
+								}
+							}
+						}else {
+							return false;
+						}
+					}
+				}
+			}
+			
+			// CHECK WRITELN HERE
+			//
+			//
+			//
+			
 			//if IDnumber is a string variable
 /*			else if(variable.get(variable.size()-1).toLowerCase().equals("string")) {
 				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
