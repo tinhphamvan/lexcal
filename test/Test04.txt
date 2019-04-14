@@ -1,20 +1,6 @@
-'uirhurigr'
-program HelloWorld; // program
-var a,b :integer;   // declare
-begin               //
-	b:=10;          //              //expresstion
-    a:=5;           // BLOCK        //expresstion
-    c:= a+b;        //              //expresstion
-    writeln(c);     //              //writeln
-end.                //
-
-
--   Chương trình bắt đầu chạy với `program`
--   Sau đó là khai báo biến         `declare`
--   Tới block bắt đầu bằng BEGIN kết thúc là end
--   Trong block có thể có 1 hoặc nhiều expression
--   Có thể có dòng writeln
--   Chú ý: Biến chỉ dùng được khi có khai báo ở trên nếu không khai báo
-    mà dùng thì báo lỗi
--   Biến không khai báo trước thì k dùng được
--   Nhớ đối chiếu kiểu dữ liệu khi khai báo và khi dùng
+program HelloWorld;
+var  a , b,c : string;
+begin
+	a:=4;
+	a:=a+b;
+end.

@@ -18,28 +18,28 @@ import javax.swing.border.TitledBorder;
 import java.util.Random;
 
 public class AST extends JFrame implements ActionListener {
-    private class student {
-        private int id;
-        private String hoten;
-        private String ngaysinh;
-        private float diemTB;
-        private int sotinchi;
-
-
-        public student(int id, String hoten, String ngaysinh, float diemTB, int sotinchi) {
-            this.id = id;
-            this.hoten = hoten;
-            this.ngaysinh = ngaysinh;
-            this.diemTB = diemTB;
-            this.sotinchi = sotinchi;
-        }
-    }
+//    private class tokendent {
+//        private int id;
+//        private String hoten;
+//        private String ngaysinh;
+//        private float diemTB;
+//        private int sotinchi;
+//
+//
+//        public tokendent(int id, String hoten, String ngaysinh, float diemTB, int sotinchi) {
+//            this.id = id;
+//            this.hoten = hoten;
+//            this.ngaysinh = ngaysinh;
+//            this.diemTB = diemTB;
+//            this.sotinchi = sotinchi;
+//        }
+//    }
     private class Node {
-        private student stu;
+        private Token token;
         private Node left, right, parent;
         private int height;
-        public Node(student stu) {
-            this.stu = stu;
+        public Node(Token token) {
+            this.token = token;
             left = null;
             right = null;
             height = 0;
@@ -124,19 +124,19 @@ public class AST extends JFrame implements ActionListener {
         return height(root);
     }
 
-    private Node insert(Node x, student y) {
-        if (x == null)
-            x = new Node(y);
-        else {
-            if (y.id < x.stu.id)
-                x.left = insert(x.left, y);
-            else if (y.id > x.stu.id)
-                x.right = insert(x.right, y);
-            else
-                x.stu = y;   
-        }
-        return x;
-    }
+//    private Node insert(Node x, tokendent y) {
+//        if (x == null)
+//            x = new Node(y);
+//        else {
+//            if (y.id < x.token.id)
+//                x.left = insert(x.left, y);
+//            else if (y.id > x.token.id)
+//                x.right = insert(x.right, y);
+//            else
+//                x.token = y;   
+//        }
+//        return x;
+//    }
 
 	    public void actionPerformed(ActionEvent e) {
         //ActionListener 
@@ -151,26 +151,26 @@ public class AST extends JFrame implements ActionListener {
                 for (int i = 0; i < n; i++) {
                     arr[i] = 100 + rnd.nextInt(899);
                 }
-                student x = new student(0, "Tên chưa cập nhật", "Ngày sinh chưa cập nhật", 0, 0);
-                x.id = arr[0];
-                x.hoten = ho[rnd.nextInt(4)]+" "+lot[rnd.nextInt(4)]+" "+ten[rnd.nextInt(4)];
-                x.ngaysinh = Integer.toString(1+rnd.nextInt(28))+"/"+ Integer.toString(1+rnd.nextInt(11))+"/"+ Integer.toString(2000+rnd.nextInt(5));
-                x.diemTB = rnd.nextInt(10);
-                x.sotinchi = 50+rnd.nextInt(100);
-                
-                Node temp = new Node(x);
-                root = insert(temp,x);
-                    student y = new student(0, "Tên chưa cập nhật", "Ngày sinh chưa cập nhật", 0, 0);
-                    y.id = arr[1];
-                    y.hoten = ho[1]+" "+lot[1]+" "+ten[1];
-                    y.ngaysinh = Integer.toString(1+rnd.nextInt(28))+"/"+ Integer.toString(1+rnd.nextInt(11))+"/"+ Integer.toString(2000+rnd.nextInt(5));
-                    y.diemTB = rnd.nextInt(10);
-                    y.sotinchi = 50+rnd.nextInt(100);
-                    Node t = new Node(y);
-//                    t.stu = y;
-                    root.left = t;
-                    Node h = new Node(x);
-                    root.left.right = h;
+//                Token x = new Token(0, "Tên chưa cập nhật", "Ngày sinh chưa cập nhật", 0, 0);
+//                x.id = arr[0];
+//                x.hoten = ho[rnd.nextInt(4)]+" "+lot[rnd.nextInt(4)]+" "+ten[rnd.nextInt(4)];
+//                x.ngaysinh = Integer.toString(1+rnd.nextInt(28))+"/"+ Integer.toString(1+rnd.nextInt(11))+"/"+ Integer.toString(2000+rnd.nextInt(5));
+//                x.diemTB = rnd.nextInt(10);
+//                x.sotinchi = 50+rnd.nextInt(100);
+//                
+//                Node temp = new Node(x);
+//                root = insert(temp,x);
+//                    tokendent y = new tokendent(0, "Tên chưa cập nhật", "Ngày sinh chưa cập nhật", 0, 0);
+//                    y.id = arr[1];
+//                    y.hoten = ho[1]+" "+lot[1]+" "+ten[1];
+//                    y.ngaysinh = Integer.toString(1+rnd.nextInt(28))+"/"+ Integer.toString(1+rnd.nextInt(11))+"/"+ Integer.toString(2000+rnd.nextInt(5));
+//                    y.diemTB = rnd.nextInt(10);
+//                    y.sotinchi = 50+rnd.nextInt(100);
+//                    Node t = new Node(y);
+////                    t.token = y;
+//                    root.left = t;
+//                    Node h = new Node(x);
+//                    root.left.right = h;
                 
             
             //ve cay len view
@@ -219,12 +219,12 @@ public class AST extends JFrame implements ActionListener {
             //luu lai toa do cua Node vua ve
             toaDo[counter][0] = x - circleRadius;
             toaDo[counter][1] = y - circleRadius;
-            toaDo[counter][2] = node.stu.id;
+//            toaDo[counter][2] = node.token.tokenString;
             counter++;
 
             //ghi ra Data cua Node(mssv)
             g.setColor(Color.black);
-            g.drawString(node.stu.id + "", x - 10, y + 4);
+            g.drawString(node.token.tokenString + "", x - 10, y + 4);
 
             if (node.left != null) {
                 //ve Line ben trai'

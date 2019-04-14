@@ -48,9 +48,11 @@ public class LexicalAnalyzer {
 					 )
 			{
 				result.remove(i);
+				i--;
 			}
 			if(result.get(i).getTokenType() == TokenType.TABnumber){
 				result.remove(i);
+				i--;
 			}
 				//System.out.println(result.get(i).toString());
 		}
