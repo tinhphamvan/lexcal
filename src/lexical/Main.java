@@ -23,7 +23,9 @@ public class Main {
 	            String textInALine;
 	            int line = 1;
 	            while ((textInALine = br.readLine()) != null) {
-//	            	System.out.println(textInALine);
+	            	if (textInALine.trim().isEmpty())
+	            		  continue;
+	            	//System.out.println(textInALine);
 	                n.tokenize(textInALine, line);
 	                line ++;
 	            }
@@ -33,7 +35,8 @@ public class Main {
 			throw new AnalyzerException("Comments that are never terminated # "+ n.getPriviousToken().getBeginIndex() + " line # " + n.getPriviousToken().getLineBegin(), n.getPriviousToken().getEndIndex(), n.getPriviousToken().getLineBegin());
 		}
 //		n.display();
-		n.SyntaxAnalyzer();
+		
+        n.SyntaxAnalyzer();
 	}
 
 }

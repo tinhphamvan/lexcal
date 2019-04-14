@@ -1,8 +1,8 @@
 program HelloWorld;
-var a,b :integer;
+var  a , b,c : Integer;
+c:Integer;
 begin
 	b:=10;
     a:=5;
     c:= a+b;
-    writeln(c);
 end.
