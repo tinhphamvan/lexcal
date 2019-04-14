@@ -1,13 +1,16 @@
 package lexical;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lexical.LexicalAnalyzer;
 
 public class SyntaxAnalyzer {
+	
 	int index = 0;
 	List<Token> result;
-	//TokenType tokenType = new TokenType();
+	List<String> variable = new ArrayList<String>();
+
 	public SyntaxAnalyzer(){
 		
 	}
@@ -21,7 +24,8 @@ public class SyntaxAnalyzer {
 	
 	public boolean validateCFG(List<Token> result) throws AnalyzerException{
 		this.result=result;
-		System.out.println(this.index);
+		
+		///check progarm
 		if (getType(this.index)==TokenType.PROGRAMnumber.toString()) {
 			if(isProgram()) {
 				this.index++;
@@ -29,6 +33,8 @@ public class SyntaxAnalyzer {
 				return false;
 			}
 		}
+		
+		//check declare
 		if(getType(this.index)==TokenType.VARnumber.toString()){
 			this.index++;
 			if(isVar()) {
@@ -38,7 +44,10 @@ public class SyntaxAnalyzer {
 				return false;
 			}
 		}
-		//System.out.println("xong var index ="+this.index);
+		 for (String item : variable) { 		      
+	           System.out.println(item); 		
+	      }
+		//check begin..end
 		if(getType(this.index)==TokenType.BEGINnumber.toString()){
 			if(isBlock()) {
 				return true; //stop here
@@ -49,26 +58,27 @@ public class SyntaxAnalyzer {
 		return false;
 	}
 	public boolean isBlock() {
+		//match begin
 		if(isBegin()) {
 			this.index++;
 		}else {
 			return false;
 		}
 		
-		//statement here
+		//check statements
 		if(stateMent()) {
 			this.index++;
+			System.out.println(this.index);
 			System.out.println("statement true");
 		}else {
+			System.out.println(this.index);
 			System.out.println("statement false");
 			return false;
 		}
-		//System.out.println(getValue(this.index));
-		//gap end
+
+		// match end. => return true => stop
 		if(isEndDot()) {
 			this.index++;
-			System.out.println("size ="+result.size());
-			System.out.println("index="+this.index);
 			if(this.index==result.size()-1) {
 				return true;
 			}
@@ -77,152 +87,172 @@ public class SyntaxAnalyzer {
 	}
 	public boolean stateMent() {
 		System.out.println("vao statement  ");
-		if(getValue(this.index).toLowerCase().equals("write")||getValue(this.index).toLowerCase().equals("writeln")) {
-			if(isWriteln()) {
-				this.index++;
-			}else {
-				return false;
-			}
-			
-		}
 		
-		if(getType(this.index)==TokenType.IDnumber.toString()&& !getValue(this.index).toLowerCase().equals("write") ) {
-			if(isExpression()) {
-				System.out.println("isExpre true");
-				//this.index++;
-				System.out.println("value = "+getValue(this.index));
+		//check expression (a:=b;)
+		if(getType(this.index)==TokenType.IDnumber.toString() ) {
+			
+			if(isExpr()) {
+				System.out.println("isExpre1 true");
+
 			}else {
 				return false;
-			}
+			}	
 		}
+		// stop by end.
 		if(getType(this.index+1)==TokenType.ENDnumber.toString()) {
 			return true;
 		}
 		this.index++;
 		return stateMent();
-//		if(getValue(this.index).toLowerCase().equals("write")||getValue(this.index).toLowerCase().equals("writeln")) {
-//			if(isWriteln()) {
-//				this.index++;
-//			}else {
-//				return false;
-//			}
-//			
-//		}
-//		
-//		if(getType(this.index)==TokenType.IDnumber.toString()&& !getValue(this.index).toLowerCase().equals("write") ) {
-//			if(isExpression()) {
-//				System.out.println("isExpre true");
-//				this.index++;
-//			}else {
-//				return false;
-//			}
-//		}
-//		return false;
 	}
+	
 	public boolean isWriteln() {
 		if(getValue(this.index).toLowerCase().equals("write")||getValue(this.index).toLowerCase().equals("writeln")) {
+			System.out.println(getValue(this.index));
 			return true;
 			//code here
 			
 		}
 		return false;
 	}
-	public boolean isExpression() {
-		System.out.println("vao expression");
-		System.out.println("bat dau expre ="+getValue(this.index));
-		if(getType(this.index)==TokenType.SEMInumber.toString()) {
-			System.out.println("gap ; va dung");
-			return true;
-		}
-		if(getType(this.index)==TokenType.IDnumber.toString()||getType(this.index)==TokenType.PLUSnumber.toString()||getType(this.index)==TokenType.ICONSTnumber.toString()) {
-			System.out.println("gap bien");
-			this.index++;
-			
-			if(getType(this.index)==TokenType.COLEQnumber.toString()&&getType(this.index+1)!=TokenType.SEMInumber.toString()) {
-				System.out.println("gap :=");
-				this.index++;
-				return isExpression();
-			}
-			return isExpression();
-		}
-		
-		System.out.println("false");
-		return false;
-	}
-//	public boolean isExpression() {
-//		System.out.println("vao expre");
-//		if(getType(this.index)==TokenType.SEMInumber.toString()) {
-//			System.out.println("gap ; va index ="+this.index);
-//			return true;
-//		}
-//		if(getType(this.index)==TokenType.IDnumber.toString()) {
-//			System.out.println("gap bien");
-//			this.index++;
-//			System.out.println("1"+getValue(this.index));
-//			System.out.println("2"+getValue(this.index+1));
-//			if(getType(this.index)==TokenType.COLEQnumber.toString()) {
-//				System.out.println("gap :=");
-//				this.index++;
-//				if(getType(this.index)==TokenType.SEMInumber.toString()) {
-//					System.out.println("gap ; va index ="+this.index);
-//					return true;
-//				}else if(getType(this.index)==TokenType.MINUSnumber.toString()||getType(this.index)==TokenType.PLUSnumber.toString()||getType(this.index)==TokenType.TIMESnumber.toString()) {//,
-//					System.out.println("gap ,");
-//					this.index++;	
-//					return isExpression();		
-//				}else {
-//					return false;
-//				}
-//			}
-//		}
-//		return false;
-//	}
+	public boolean isExpr() {
 
-	public boolean isProgram() {
-		if(isWord(this.result.get(this.index),TokenType.PROGRAMnumber)) {
-			System.out.println("gap program");
-			this.index ++;
-			// program name
-			if(isWord(this.result.get(this.index),TokenType.IDnumber)) {
-				System.out.println("gap ten CT");
-				this.index ++;
-				//gap (
-				if (isWord(this.result.get(this.index),TokenType.SEMInumber)){// ;
-					System.out.println("gap ; end isProgram with "+this.index);
-					return true;
+		// check: match IDnumber and it is declared
+		if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index))) {
+			this.index++;
+
+			// if IDnumber is a integer variable
+			if(variable.get(variable.size()-1).toLowerCase().equals("integer")) {
+
+				//match :=
+				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
+					this.index++;
+
+					// check: match IDnumber2 and it is declared
+					// or match a number
+					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
+						this.index++;
+
+						//match ; => break
+						if(getType(this.index)==TokenType.SEMInumber.toString()) {
+							return true;
+						}
+						// for a:= a + b;
+						//match +-*/
+						else if(getType(this.index)==TokenType.PLUSnumber.toString()) {
+							this.index++;
+							
+							//match IDnumber or number 
+							if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
+								this.index++;
+								
+								//match ; => break
+								if(getType(this.index)==TokenType.SEMInumber.toString()) {
+									return true;
+								}
+							}
+						}else {
+							return false;
+						}
+					}
 				}
 			}
+			//if IDnumber is a string variable
+/*			else if(variable.get(variable.size()-1).toLowerCase().equals("string")) {
+				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
+					this.index++;
+					
+					// check: match IDnumber2 and it is declared
+					// or match a number
+					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
+						this.index++;
+						if(getType(this.index)==TokenType.SEMInumber.toString()) {
+							return true;
+						}
+					}
+				}
+			}
+			*/
+//			else {
+//				return false;
+//			}
 		}
+		System.out.println("het");
 		return false;
 	}
+	
 	public boolean isBegin() {
 		if(getType(this.index)==TokenType.BEGINnumber.toString()) {
-			System.out.println("gap begin");
 			return true;
 		}
 		return false;
 	}
-	public boolean isNum(List<Token> result, int index){
-		if(isWord(result.get(index),TokenType.ICONSTnumber)) {
-			return true;
-		}
-		return false;
-	}
+	
 	public boolean isEndDot() {
 		if(isWord(result.get(this.index),TokenType.ENDnumber)&& isWord(result.get(this.index+1),TokenType.DOTnumber)) {
 			return true;
 		}
 		return false;
 	}
+	
+	public boolean isProgram() {
+		
+		//match program
+		if(getType(this.index)==TokenType.PROGRAMnumber.toString()) {
+			this.index ++;
+			
+			// program name (IDnumber)
+			if(getType(this.index)==TokenType.IDnumber.toString()) {
+				this.index ++;
+				
+				//match ; => break
+				if (getType(this.index)==TokenType.SEMInumber.toString()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isVar(){
+		
+		//check list of variable
+			if(isIdentList()) {
+				this.index++;
+				System.out.println("index = "+this.index);
+				
+				//match String or Integer 
+				if(getValue(this.index).toLowerCase().equals("integer")||getValue(this.index).toLowerCase().equals("string")) {
+					
+					//add to list
+					this.variable.add(getValue(this.index));	
+					this.index++;
+					
+					//match ; => break
+					if(getType(this.index)==TokenType.SEMInumber.toString()) {
+						return true;
+					}				
+				}
+			}
+		return false;
+	}
+	
 	public boolean isIdentList() {
+		
+		//match variable
 		if(getType(this.index)==TokenType.IDnumber.toString()) {
-			System.out.println("gap bien");
+			
+			//add variable into arraylist
+			this.variable.add(getValue(this.index));
 			this.index++;
+			
+			//match : => break
 			if(getType(this.index)==TokenType.COLONnumber.toString()) {
-				System.out.println("gap : va index ="+this.index);
 				return true;
-			}else if(getType(this.index)==TokenType.COMMMAnumber.toString()) {//,
-				System.out.println("gap ,");
+			}
+			
+			//match , => call isIdentist()
+			else if(getType(this.index)==TokenType.COMMMAnumber.toString()) {
 				this.index++;	
 				return isIdentList();		
 			}else {
@@ -231,31 +261,62 @@ public class SyntaxAnalyzer {
 		}
 		return false;	
 	}
-	public boolean isVar(){
+//	public boolean isExpression() {
+//	System.out.println("vao expression");
+//	System.out.println("bat dau expre ="+getValue(this.index));
+//	if(getType(this.index)==TokenType.SEMInumber.toString()) {
+//		System.out.println("gap ; va dung");
+//		return true;
+//	}
+//	if((getType(this.index)==TokenType.IDnumber.toString()&&getType(this.index+1)!=TokenType.IDnumber.toString())||getType(this.index)==TokenType.PLUSnumber.toString()||getType(this.index)==TokenType.ICONSTnumber.toString()) {
+//		System.out.println("gap bien");
+//		this.index++;
+//		
+//		if(getType(this.index)==TokenType.COLEQnumber.toString()&&getType(this.index+1)!=TokenType.SEMInumber.toString()) {
+//			System.out.println("gap :=");
+//			this.index++;
+//			//return isExpression();
+//		}
+//		return isExpression();
+//	}
+//	
+//	System.out.println("false");
+//	return false;
+//}
+//public boolean isExpression() {
+//	System.out.println("vao expre");
+//	if(getType(this.index)==TokenType.SEMInumber.toString()) {
+//		System.out.println("gap ; va index ="+this.index);
+//		return true;
+//	}
+//	if(getType(this.index)==TokenType.IDnumber.toString()) {
+//		System.out.println("gap bien");
+//		this.index++;
+//		System.out.println("1"+getValue(this.index));
+//		System.out.println("2"+getValue(this.index+1));
+//		if(getType(this.index)==TokenType.COLEQnumber.toString()) {
+//			System.out.println("gap :=");
+//			this.index++;
+//			if(getType(this.index)==TokenType.SEMInumber.toString()) {
+//				System.out.println("gap ; va index ="+this.index);
+//				return true;
+//			}else if(getType(this.index)==TokenType.MINUSnumber.toString()||getType(this.index)==TokenType.PLUSnumber.toString()||getType(this.index)==TokenType.TIMESnumber.toString()) {//,
+//				System.out.println("gap ,");
+//				this.index++;	
+//				return isExpression();		
+//			}else {
+//				return false;
+//			}
+//		}
+//	}
+//	return false;
+//}
 
-			if(isIdentList()) {
-				this.index++;
-				System.out.println("index = "+this.index);
-				if(getValue(this.index).toLowerCase().equals("integer")) {
-					this.index++;
-					System.out.println("gap kieu du lieu");
-					System.out.println("index="+getValue(this.index)+getType(this.index));
-					
-					if(getType(this.index)==TokenType.SEMInumber.toString()&&getType(this.index+1)!=TokenType.IDnumber.toString()) {
-						System.out.println("gap ; va khac id index="+this.index);
-						
-						return true;
-					}
-					if(getType(this.index)==TokenType.SEMInumber.toString()&&getType(this.index+1)==TokenType.IDnumber.toString()) {
-						System.out.println("lai gap id");
-						this.index++;
-						return isVar();
-					}
-				}
-			}
-
-		return false;
-	}
+//	if(getType(this.index)==TokenType.SEMInumber.toString()&&getType(this.index+1)==TokenType.IDnumber.toString()) {
+//		System.out.println("lai gap id");
+//		this.index++;
+//		return isVar();
+//	}
 	//Bat dau chuong trinh bang PROGRAM
 	/*public boolean startProgram(List<Token> result, int index) {
 		if (isProgram()) {
@@ -454,36 +515,6 @@ public class SyntaxAnalyzer {
 //		return true;
 //	}
 	
-	public boolean isKeyword(List<Token> result, int index) {
-		if(isWord(result.get(this.index),TokenType.SEMInumber)||isWord(result.get(this.index),TokenType.SEMInumber)||isWord(result.get(this.index),TokenType.SEMInumber)) {
-			return true;
-		}
-	return false;
-	}
-	
-	//Comment here
-	public boolean statement(List<Token> result, int index) {
-		//code here
-		return false;
-	}
-	
-	//Comment here
-	public boolean unsignedConstant(List<Token> result, int index) {
-		//code here
-		return false;
-	}
-	
-	//Comment here
-	public boolean expression(List<Token> result, int index) {
-		//code here
-		return false;
-	}
-	
-	//Comment here
-	public boolean simpleExpression(List<Token> result, int index) {
-		//code here
-		return false;
-	}
 	
 	//Kiem tra tu dung voi TokenType hay khong?
 	public boolean isWord(Token token, TokenType dataType) {
