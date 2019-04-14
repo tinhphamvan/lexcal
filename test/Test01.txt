@@ -1,1 +1,28 @@
-var x, y;
+PROGRAM : 								(PROGRAM | HelloWorld)						| program HelloWorld;
+				   							/			  \							|	var a,b,c : integer;
+				   						   /			   \						| begin
+DECRALE	:	 						DECLARE(var)	      BLOCK						|	a := b + c;
+						 		   /		  \			 /		\					|	c := 5;
+						   		  /			   \		/		 \					|	prinln(a);
+							(a,b,c)			 integer PRINTLN	EXPRESSION			| end.
+													  /	 \		 /		\			|
+													 /	  \		/		 \			|
+													a	  int  :=		  :=		|
+															  / \		  /\		|
+															 /	 \		 /	\		|
+															a     +		c	 5		|
+																/	\				|
+															   /	 \				|
+															  b		  c				|
+																				Object : TreeProperty{
+ROOT																									string program = IDnumber				
+ROOT.LEFT =>ROOT.LEFT.LEFT & ROOT.LEFT.RIGHT															array variable = [a,b,c,string]
+ROOT.RIGHT => 	ROOT.RIGHT.LEFT => ROOT.RIGHT.LEFT.LEFT & ROOT.RIGHT.LEFT.RIGHT							println		   = Token - TokenType
+				ROOT.RIGHT.RIGHT =>	`CRAZY`																expression {
+																													[]exps = expression.plit(":=")
+																													if exps[1] > 1
+																													split(" ") => rightExps[0] = IDnumber | rightExps[1] = NodeOpType | rightExps[2] = IDnumber
+																													else
+																														 exps[1] = IDnumber
+																													}
+																									 }

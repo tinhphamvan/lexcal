@@ -1,4 +1,4 @@
-package lexical;
+	package lexical;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

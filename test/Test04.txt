@@ -1,3 +1,4 @@
+'uirhurigr'
 program HelloWorld; // program
 var a,b :integer;   // declare
 begin               //
