@@ -95,8 +95,12 @@ public class AST extends JFrame implements ActionListener {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
-    public void buildAST() {
+    public void buildAST(TreeProperty tree) {
         new AST();
+        
+//        for(int i=0;i<tree.declare.size();i++){
+//            System.out.println(tree.declare.get(i));
+//        } 
     }
 
 

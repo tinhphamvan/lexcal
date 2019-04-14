@@ -6,9 +6,9 @@ public class TreeProperty {
     public String program;
 	public List<String>  declare;
     public Token println;
-    public String[] expression;
+    public List<String> expression;
 
-    public void tokendent(String program, List<String> declare, Token println, String[] expression) {
+    public void tokendent(String program, List<String> declare, Token println, List<String> expression) {
         this.program = program;
         this.declare = declare;
         this.println = println;
@@ -38,11 +38,11 @@ public class TreeProperty {
   		this.println = println;
   	}
 
-  	public String[] getExpression() {
+  	public List<String> getExpression() {
   		return expression;
   	}
 
-  	public void setExpression(String[] expression) {
+  	public void setExpression(List<String> expression) {
   		this.expression = expression;
   	}
 }

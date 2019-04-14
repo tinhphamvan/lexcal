@@ -8,8 +8,10 @@ import lexical.LexicalAnalyzer;
 public class SyntaxAnalyzer {
 	
 	int index = 0;
+	String state = "";
 	List<Token> result;
 	List<String> variable = new ArrayList<String>();
+	List<String> statement = new ArrayList<String>();
 	TreeProperty tree = new TreeProperty();
 	public SyntaxAnalyzer(){
 		
@@ -38,13 +40,13 @@ public class SyntaxAnalyzer {
 						tree.setDeclare(variable);
 						this.index++;
 					}else {
-						System.out.println("false");
 						return false;
 					}
 				}
 				//check begin..end
 				if(getType(this.index)==TokenType.BEGINnumber.toString()){
 					if(isBlock()) {
+						tree.setExpression(this.statement);
 						return true; //stop here
 					}else {
 						return false;
@@ -56,9 +58,7 @@ public class SyntaxAnalyzer {
 		}
 		
 		
-		 for (String item : variable) { 		      
-	           System.out.println(item); 		
-	      }
+		
 		
 		return false;
 	}
@@ -73,14 +73,10 @@ public class SyntaxAnalyzer {
 		//check statements
 		if(stateMent()) {
 			this.index++;
-			System.out.println(this.index);
-			System.out.println("statement true");
 		}else {
-			System.out.println(this.index);
-			System.out.println("statement false");
 			return false;
 		}
-
+		
 		// match end. => return true => stop
 		if(isEndDot()) {
 			this.index++;
@@ -90,14 +86,13 @@ public class SyntaxAnalyzer {
 		}
 		return false;
 	}
-	public boolean stateMent() {
-		System.out.println("vao statement  ");
-		
+	public boolean stateMent() {		
 		//check expression (a:=b;)
 		if(getType(this.index)==TokenType.IDnumber.toString() ) {
 			
 			if(isExpr()) {
-				System.out.println("isExpre1 true");
+				this.statement.add(this.state);
+				this.state = "";
 
 			}else {
 				return false;
@@ -113,10 +108,17 @@ public class SyntaxAnalyzer {
 	
 	public boolean isWriteln() {
 		if(getValue(this.index).toLowerCase().equals("write")||getValue(this.index).toLowerCase().equals("writeln")) {
-			System.out.println(getValue(this.index));
-			return true;
-			//code here
-			
+			this.index++;
+			if(getType(this.index)==TokenType.LPARENnumber.toString()) {
+				this.index++;
+				if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index))) {
+					this.index++;
+					if(getType(this.index)==TokenType.LPARENnumber.toString()) {
+						return true;
+					}
+				}
+				
+			}
 		}
 		return false;
 	}
@@ -124,33 +126,40 @@ public class SyntaxAnalyzer {
 
 		// check: match IDnumber and it is declared
 		if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index))) {
+			this.state += getValue(this.index);
 			this.index++;
-
+			
 			// if IDnumber is a integer variable
 			if(variable.get(variable.size()-1).toLowerCase().equals("integer")) {
 
 				//match :=
 				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
+					this.state += getValue(this.index);
 					this.index++;
 					// check: match IDnumber2 and it is declared
 					// or match a number
 					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
+						this.state += getValue(this.index);
 						this.index++;
 
 						//match ; => break
 						if(getType(this.index)==TokenType.SEMInumber.toString()) {
+							this.state += getValue(this.index);
 							return true;
 						}
 						// for a:= a + b;
 						//match +-*/
 						else if(getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.MINUSnumber.toString() || getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.TIMESnumber.toString() ) {
+							this.state += getValue(this.index);
 							this.index++;
 							//match IDnumber or number 
 							if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
+								this.state += getValue(this.index);
 								this.index++;
 								
 								//match ; => break
 								if(getType(this.index)==TokenType.SEMInumber.toString()) {
+									this.state += getValue(this.index);
 									return true;
 								}
 							}
@@ -163,31 +172,32 @@ public class SyntaxAnalyzer {
 			//check for string variable
 			if(variable.get(variable.size()-1).toLowerCase().equals("string")) {
 				//match :=
-				System.out.println("gap");
 				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
+					this.state += getValue(this.index);
 					this.index++;
-					System.out.println("gap");
 					// check: match IDnumber2 and it is declared
 					// or match a number
-					System.out.println(getValue(this.index));
-					System.out.println(getType(this.index));
 					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.CCONSTnumber.toString()) {
+						this.state += getValue(this.index);
 						this.index++;
-						System.out.println("gap");
 						//match ; => break
 						if(getType(this.index)==TokenType.SEMInumber.toString()) {
+							this.state += getValue(this.index);
 							return true;
 						}
 						// for a:= a + b;
 						//match +-*/
 						else if(getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.MINUSnumber.toString() || getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.TIMESnumber.toString() ) {
+							this.state += getValue(this.index);
 							this.index++;
 							//match IDnumber or number 
 							if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.CCONSTnumber.toString()) {
+								this.state += getValue(this.index);
 								this.index++;
 								
 								//match ; => break
 								if(getType(this.index)==TokenType.SEMInumber.toString()) {
+									this.state += getValue(this.index);
 									return true;
 								}
 							}
@@ -223,7 +233,6 @@ public class SyntaxAnalyzer {
 //				return false;
 //			}
 		}
-		System.out.println("het");
 		return false;
 	}
 	
@@ -266,7 +275,6 @@ public class SyntaxAnalyzer {
 		//check list of variable
 			if(isIdentList()) {
 				this.index++;
-				System.out.println("index = "+this.index);
 				
 				//match String or Integer 
 				if(getValue(this.index).toLowerCase().equals("integer")||getValue(this.index).toLowerCase().equals("string")) {

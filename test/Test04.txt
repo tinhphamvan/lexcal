@@ -2,5 +2,7 @@ program HelloWorld;
 var  a , b,c : string;
 begin
 	a:= 'hello world';
-	a:=a+b;
+	b:= a + b ;
+	a:= 'hello world';
+	writeln(
 end.

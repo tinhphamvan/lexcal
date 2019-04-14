@@ -60,9 +60,11 @@ public class LexicalAnalyzer {
 	
 	
 	SyntaxAnalyzer s = new SyntaxAnalyzer();
+	AST	tree = new AST();
 	public void SyntaxAnalyzer() throws AnalyzerException {
 		removeAuxiliary(result);
 		if(s.validateCFG(result)) {
+			tree.buildAST(s.tree);
 			System.out.println("BUILD SUCCESSFULLY");
 		}else {
 			System.out.println("BUILD FAIL");
