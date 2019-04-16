@@ -31,6 +31,8 @@ public class AnalyzerException extends Exception {
 		this.errorPosition = errorPosition;
 		this.errorLine 	   = errorLine;
 	}
+	
+	
 
 	/**
 	 * Creates {@code AnalyzerException} object with specified error position

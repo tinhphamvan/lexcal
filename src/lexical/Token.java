@@ -13,8 +13,8 @@ package lexical;
 public class Token {
 
 	
-	private int beginIndex;
-	private int lineBegin;
+	public int beginIndex;
+	public int lineBegin;
 	private int endIndex;
 	private int lineEnd;	
 	private boolean isComment;

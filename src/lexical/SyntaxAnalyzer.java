@@ -24,12 +24,18 @@ public class SyntaxAnalyzer {
 	public String getValue(int index) {
 		return this.result.get(index).tokenString;
 	}
+	public int getLine(int index) {
+		return this.result.get(index).lineBegin;
+	}
+	public int getPossiton(int index) {
+		return this.result.get(index).beginIndex;
+	}
 	
 	public boolean validateCFG(List<Token> result) throws AnalyzerException{
 		this.result=result;
 		
 		///check progarm
-		if (getType(this.index)==TokenType.PROGRAMnumber.toString()) {
+//		if (getType(this.index)==TokenType.PROGRAMnumber.toString()) {
 //			tree.setProgram()
 
 			if(isProgram()) {
@@ -41,7 +47,8 @@ public class SyntaxAnalyzer {
 						tree.setDeclare(variable);
 						this.index++;
 					}else {
-						return false;
+						throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+						//return false;
 					}
 				}
 				//check begin..end
@@ -51,31 +58,35 @@ public class SyntaxAnalyzer {
 						tree.setExpression2(this.statement2);
 						return true; //stop here
 					}else {
-						return false;
+						throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+						//return false;
 					}
 				}
-			}else {
+			}
+			/*else {
 				return false;
 			}
-		}
+		}*/
 		
 		
 		
 		
 		return false;
 	}
-	public boolean isBlock() {
+	public boolean isBlock() throws AnalyzerException{
 		//match begin
 		if(isBegin()) {
 			this.index++;
 		}else {
-			return false;
+			throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+			//return false;
 		}
 		
 		//check statements
 		if(stateMent()) {
 		}else {
-			return false;
+			throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+			//return false;
 		}
 		
 		// match end. => return true => stop
@@ -85,16 +96,18 @@ public class SyntaxAnalyzer {
 				return true;
 			}
 		}
-		return false;
+		throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
-	public boolean stateMent() {
+	public boolean stateMent() throws AnalyzerException{
 		
 		//check expression (a:=b;)
 		if(getType(this.index)==TokenType.IDnumber.toString() ) {
 			if(isExpr()) {
 				getExp++;
 			}else {
-				return false;
+				throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+				//return false;
 			}	
 		}
 		if(getType(this.index)==TokenType.WRITEnumber.toString() || getType(this.index)==TokenType.WRITELNumber.toString()) {
@@ -102,7 +115,8 @@ public class SyntaxAnalyzer {
 			if(isWriteln()) {
 			}
 			else {
-				return false;
+				throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+				//return false;
 			}
 		}
 		else {
@@ -117,7 +131,7 @@ public class SyntaxAnalyzer {
 		return stateMent();
 	}
 	
-	public boolean isWriteln() {
+	public boolean isWriteln() throws AnalyzerException{
 		if(getType(this.index)==TokenType.LPARENnumber.toString()) {
 			this.index++;
 			if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index)) ||getType(this.index)==TokenType.CCONSTnumber.toString() ) {
@@ -140,10 +154,10 @@ public class SyntaxAnalyzer {
 			}
 			
 		}
-		
-		return false;
+		throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
-	public boolean isExpr() {
+	public boolean isExpr() throws AnalyzerException{
 
 		// check: match IDnumber and it is declared
 		if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index))) {
@@ -214,7 +228,8 @@ public class SyntaxAnalyzer {
 								}
 							}
 						}else {
-							return false;
+							throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+							//return false;
 						}
 					}
 				}
@@ -276,7 +291,8 @@ public class SyntaxAnalyzer {
 								}
 							}
 						}else {
-							return false;
+							throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+							//return false;
 						}
 					}
 				}
@@ -307,24 +323,27 @@ public class SyntaxAnalyzer {
 //				return false;
 //			}
 		}
-		return false;
+		throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
 	
-	public boolean isBegin() {
+	public boolean isBegin() throws  AnalyzerException{
 		if(getType(this.index)==TokenType.BEGINnumber.toString()) {
 			return true;
 		}
-		return false;
+		throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
 	
-	public boolean isEndDot() {
+	public boolean isEndDot() throws AnalyzerException {
 		if(isWord(result.get(this.index),TokenType.ENDnumber)&& isWord(result.get(this.index+1),TokenType.DOTnumber)) {
 			return true;
 		}
-		return false;
+		throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
 	
-	public boolean isProgram() {
+	public boolean isProgram() throws AnalyzerException{
 		
 		//match program
 		if(getType(this.index)==TokenType.PROGRAMnumber.toString()) {
@@ -340,11 +359,11 @@ public class SyntaxAnalyzer {
 					return true;
 				}
 			}
-		}
-		return false;
+		} throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
 	
-	public boolean isVar(){
+	public boolean isVar() throws AnalyzerException{
 		
 		//check list of variable
 			if(isIdentList()) {
@@ -363,10 +382,11 @@ public class SyntaxAnalyzer {
 					}				
 				}
 			}
-		return false;
+			throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;
 	}
 	
-	public boolean isIdentList() {
+	public boolean isIdentList() throws AnalyzerException{
 		
 		//match variable
 		if(getType(this.index)==TokenType.IDnumber.toString()) {
@@ -385,10 +405,12 @@ public class SyntaxAnalyzer {
 				this.index++;	
 				return isIdentList();		
 			}else {
-				return false;
+				throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+				//return false;
 			}
 		}
-		return false;	
+		throw new AnalyzerException("Error at line # " + getLine(this.index), this.index, getLine(this.index));
+		//return false;	
 	}
 //	public boolean isExpression() {
 //	System.out.println("vao expression");
