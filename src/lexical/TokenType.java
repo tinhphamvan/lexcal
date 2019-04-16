@@ -59,12 +59,10 @@ public enum TokenType {
 	TIMESnumber,
 
 	DOTDOTnumber,
-
 	
-
+	WRITEnumber,
 	
-
-	
+	WRITELNumber,
 
 	ICONSTnumber,
 

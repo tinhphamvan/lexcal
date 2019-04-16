@@ -1,6 +1,7 @@
 package lexical;
 
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -22,10 +23,10 @@ import java.util.Random;
 public class AST extends JFrame implements ActionListener {
   
     private class Node {
-        private Token token;
+        private String token;
         private Node left, right, parent;
         private int height;
-        public Node(Token token) {
+        public Node(String token) {
             this.token = token;
             left = null;
             right = null;
@@ -33,35 +34,18 @@ public class AST extends JFrame implements ActionListener {
         }
     }
      
-    //String for edit
-    String id;
-    String hoten;
-    String ngaysinh;
-    String diemTB;
-    String sotinchi;
-    
-    //String for random name
-    String[] ho =  new String[4];
-	String[] ten = new String[4];
-	String[] lot = new String[4];
-	
     public Node root = null; 
 
     int[][] toaDo = new int[500][3]; //luu toa do x,y,mssv cua 1 node
+    
     int counter = 0;// bien dem cho toaDo
 
     boolean treePainted = false; //cay da duoc ve hay chua?
 
-    // khoi tao cac button, cac lable
     private JButton random = new JButton("BUILD TREE");
-    
-    //text fields
 
 
-    //Panel contains the buttons
-    private JPanel buttonPanel = new JPanel();
-
-    Font font = new Font("Verdana", Font.BOLD, 12);
+    Font font = new Font("Verdana", Font.BOLD, 20);
 
     //Panel to display the tree
     private Tree view = new Tree();
@@ -71,23 +55,25 @@ public class AST extends JFrame implements ActionListener {
         setTitle("Abstact Syntax Tree");
         setBackground(Color.white);
 
-        setLayout(new GridLayout(1, 2));
+        setLayout(new BorderLayout());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
         
         //Adding the tree view panel to the frame, setting border and size
         add(view);
         view.setBorder(new TitledBorder("Tree View"));
-        view.setPreferredSize(new Dimension(1000, 1000));
+        view.setPreferredSize(new Dimension(800, 800));
         view.setVisible(true);
         view.setBackground(Color.white);
 
         //adding button
+        
         random.setBackground(Color.LIGHT_GRAY);
         random.setBounds(500, 900, 200, 80);
-        view.add(random);
-        //Adding ActionListeners to all the buttons
+        random.setLayout(null);
+        random.setAlignmentX(JButton.LEFT_ALIGNMENT);
         random.addActionListener(this);
+        add(random,BorderLayout.SOUTH);
         //Finishing up
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,77 +82,75 @@ public class AST extends JFrame implements ActionListener {
     }
 
     public void buildAST(TreeProperty tree) {
-        new AST();
         
-//        for(int i=0;i<tree.declare.size();i++){
-//            System.out.println(tree.declare.get(i));
-//        } 
+        String dec = "";
+        root = new Node("PROGRAM | "+tree.getProgram().tokenString);
+        
+        //PRINT DECLARE 
+        if(tree.getDeclare() == null){
+        	root.left = new Node("DummyNODE");
+        }else {
+        	root.left = new Node("DECLARE(var)");
+            for(int i = 0; i < tree.getDeclare().size() -1; i++) {
+            	dec = " "+dec + tree.getDeclare().get(i) + " ";
+            }
+            root.left.left = new Node(dec);
+            root.left.right = new Node("  "+tree.getDeclare().get(tree.getDeclare().size() - 1));
+        }
+        
+        
+        //
+        
+        root.right = new Node("BLOCK");
+        
+        //WRITELN
+        if(tree.getPrintln() == null){
+        	root.right.left = new Node("DummyNODE");
+        }else {
+        	root.right.left = new Node("    WRITELN");
+            root.right.left.left = new Node("    " + tree.getPrintln().tokenString);
+            root.right.left.right = new Node(tree.getPrintln().tokenType.toString());
+        }
+        
+        
+        
+        
+        //Statement
+        if(tree.getExpression1().size() == 0) {
+        	root.right.right = new Node("DummyNODE");
+        }else {
+        	root.right.right = new Node("STATEMENT");
+        	//expression 1
+            root.right.right.left = new Node("     " + tree.getExpression1().get(1));
+            root.right.right.left.left = new Node("     " + tree.getExpression1().get(0));
+            if(tree.getExpression1().size() < 5) {
+            	root.right.right.left.right = new Node("   " + tree.getExpression1().get(2));
+            }else {
+            	root.right.right.left.right = new Node("   " + tree.getExpression1().get(3));
+            	root.right.right.left.right.left = new Node("   " + tree.getExpression1().get(2));
+            	root.right.right.left.right.right = new Node("   " + tree.getExpression1().get(4));
+            }
+            //expression 2
+            root.right.right.right = new Node("     " + tree.getExpression2().get(1));
+            root.right.right.right.left = new Node("     " + tree.getExpression2().get(0));
+            if(tree.getExpression2().size() < 5) {
+            	root.right.right.right.right = new Node("   " + tree.getExpression2().get(2));
+            }else {
+            	root.right.right.right.right = new Node("   " + tree.getExpression2().get(3));
+            	root.right.right.right.right.left = new Node("   " + tree.getExpression2().get(2));
+            	root.right.right.right.right.right = new Node("   " + tree.getExpression2().get(4));
+            }
+        }
+        
     }
 
 
-    ///////////////////////////////////////////       AVL code			/////////////////////////////////////////////
-
-    public int height(Node x) {
-        if (x == null)
-            return 0;
-        return x.height;
-    }
-    public int height() {
-        return height(root);
-    }
-
-//    private Node insert(Node x, tokendent y) {
-//        if (x == null)
-//            x = new Node(y);
-//        else {
-//            if (y.id < x.token.id)
-//                x.left = insert(x.left, y);
-//            else if (y.id > x.token.id)
-//                x.right = insert(x.right, y);
-//            else
-//                x.token = y;   
-//        }
-//        return x;
-//    }
 
 	    public void actionPerformed(ActionEvent e) {
         //ActionListener 
 
         if (e.getSource() == random) {// 
-        	ho[0]="Lê";ho[1]="Trần";ho[2]="Nguyễn";ho[3] = "Đinh";
-        	lot[0]="Văn";lot[1]="Thị";lot[2]="Anh";lot[3] = "Ngọc";
-        	ten[0]="Long";ten[1]="Nhi";ten[2]="Việt";ten[3] = "Nam";
-        	Random rnd = new Random();
-        	int n = 3 + rnd.nextInt(4);
-            int[] arr = new int[n];
-                for (int i = 0; i < n; i++) {
-                    arr[i] = 100 + rnd.nextInt(899);
-                }
-//                Token x = new Token(0, "Tên chưa cập nhật", "Ngày sinh chưa cập nhật", 0, 0);
-//                x.id = arr[0];
-//                x.hoten = ho[rnd.nextInt(4)]+" "+lot[rnd.nextInt(4)]+" "+ten[rnd.nextInt(4)];
-//                x.ngaysinh = Integer.toString(1+rnd.nextInt(28))+"/"+ Integer.toString(1+rnd.nextInt(11))+"/"+ Integer.toString(2000+rnd.nextInt(5));
-//                x.diemTB = rnd.nextInt(10);
-//                x.sotinchi = 50+rnd.nextInt(100);
-//                
-//                Node temp = new Node(x);
-//                root = insert(temp,x);
-//                    tokendent y = new tokendent(0, "Tên chưa cập nhật", "Ngày sinh chưa cập nhật", 0, 0);
-//                    y.id = arr[1];
-//                    y.hoten = ho[1]+" "+lot[1]+" "+ten[1];
-//                    y.ngaysinh = Integer.toString(1+rnd.nextInt(28))+"/"+ Integer.toString(1+rnd.nextInt(11))+"/"+ Integer.toString(2000+rnd.nextInt(5));
-//                    y.diemTB = rnd.nextInt(10);
-//                    y.sotinchi = 50+rnd.nextInt(100);
-//                    Node t = new Node(y);
-////                    t.token = y;
-//                    root.left = t;
-//                    Node h = new Node(x);
-//                    root.left.right = h;
-                
-            
-            //ve cay len view
             view.paintTree();
-            //cay da ve ->> set true
             treePainted = true;
         }
 
@@ -189,9 +173,9 @@ public class AST extends JFrame implements ActionListener {
 
 
     class Tree extends JPanel {
-        private int circleRadius = 35; //ban kinh Node
-        private int khoangCachDoc = 80; //khoang cach giua 2 dinh tren, duoi
-
+        private int circleRadius = 40; //ban kinh Node
+        private int khoangCachDoc = 60; //khoang cach giua 2 dinh tren, duoi
+        
         protected void paintTree() {
             Graphics g = getGraphics();
             if (root != null) {
@@ -205,7 +189,7 @@ public class AST extends JFrame implements ActionListener {
     	
             //ve node       
             g.setColor(Color.CYAN);
-            g.fillOval(x - circleRadius, y - circleRadius, 2 * circleRadius, 2 * circleRadius);
+            g.fillRect(x - circleRadius, y - circleRadius + 15, 2 * circleRadius, circleRadius);
 
             //luu lai toa do cua Node vua ve
             toaDo[counter][0] = x - circleRadius;
@@ -215,7 +199,7 @@ public class AST extends JFrame implements ActionListener {
 
             //ghi ra Data cua Node(mssv)
             g.setColor(Color.black);
-            g.drawString(node.token.tokenString + "", x - 10, y + 4);
+            g.drawString(node.token, x - circleRadius + 3 , y  );
 
             if (node.left != null) {
                 //ve Line ben trai'

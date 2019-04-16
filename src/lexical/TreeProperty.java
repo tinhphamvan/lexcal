@@ -3,22 +3,24 @@ package lexical;
 import java.util.List;
 
 public class TreeProperty {
-    public String program;
+    public Token program;
 	public List<String>  declare;
     public Token println;
-    public List<String> expression;
+    public List<String> expression1;
+    public List<String> expression2;
 
-    public void tokendent(String program, List<String> declare, Token println, List<String> expression) {
+    public void tokendent(Token program, List<String> declare, Token println, List<String> expression1,List<String> expression2) {
         this.program = program;
         this.declare = declare;
         this.println = println;
-        this.expression = expression;
+        this.expression1 = expression1;
+        this.expression2 = expression2;
     }
-    public String getProgram() {
+    public Token getProgram() {
   		return program;
   	}
 
-  	public void setProgram(String program) {
+  	public void setProgram(Token program) {
   		this.program = program;
   	}
 
@@ -38,11 +40,18 @@ public class TreeProperty {
   		this.println = println;
   	}
 
-  	public List<String> getExpression() {
-  		return expression;
+  	public List<String> getExpression1() {
+  		return expression1;
   	}
 
-  	public void setExpression(List<String> expression) {
-  		this.expression = expression;
+  	public void setExpression1(List<String> expression1) {
+  		this.expression1 = expression1;
+  	}
+  	public List<String> getExpression2() {
+  		return expression2;
+  	}
+
+  	public void setExpression2(List<String> expression2) {
+  		this.expression2 = expression2;
   	}
 }

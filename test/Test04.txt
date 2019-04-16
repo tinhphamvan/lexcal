@@ -1,8 +1,6 @@
 program HelloWorld;
 var  a , b,c : string;
 begin
-	a:= 'hello world';
-	b:= a + b ;
-	a:= 'hello world';
-	writeln(
+	writeln();
+	
 end.

@@ -60,10 +60,11 @@ public class LexicalAnalyzer {
 	
 	
 	SyntaxAnalyzer s = new SyntaxAnalyzer();
-	AST	tree = new AST();
+	
 	public void SyntaxAnalyzer() throws AnalyzerException {
 		removeAuxiliary(result);
 		if(s.validateCFG(result)) {
+			AST	tree = new AST();
 			tree.buildAST(s.tree);
 			System.out.println("BUILD SUCCESSFULLY");
 		}else {
@@ -255,7 +256,8 @@ public class LexicalAnalyzer {
 		regEx.put(TokenType.ANDnumber, "\\b(and)\\b.*");
 		regEx.put(TokenType.ARRAYnumber, "\\b(array)\\b.*");
 		regEx.put(TokenType.BEGINnumber, "\\b(begin)\\b.*");
-		
+		regEx.put(TokenType.WRITEnumber, "\\b(write)\\b.*");
+		regEx.put(TokenType.WRITELNumber, "\\b(writeln)\\b.*");
 		regEx.put(TokenType.DIVnumber, "\\b(div)\\b.*");
 		regEx.put(TokenType.DOWNTOnumber, "\\b(downto)\\b.*");
 		regEx.put(TokenType.ELSEnumber, "\\b(else)\\b.*");

@@ -6,12 +6,13 @@ import java.util.List;
 import lexical.LexicalAnalyzer;
 
 public class SyntaxAnalyzer {
-	
+	int getExp = 0;
 	int index = 0;
 	String state = "";
 	List<Token> result;
 	List<String> variable = new ArrayList<String>();
-	List<String> statement = new ArrayList<String>();
+	List<String> statement1 = new ArrayList<String>();
+	List<String> statement2 = new ArrayList<String>();
 	TreeProperty tree = new TreeProperty();
 	public SyntaxAnalyzer(){
 		
@@ -46,7 +47,8 @@ public class SyntaxAnalyzer {
 				//check begin..end
 				if(getType(this.index)==TokenType.BEGINnumber.toString()){
 					if(isBlock()) {
-						tree.setExpression(this.statement);
+						tree.setExpression1(this.statement1);
+						tree.setExpression2(this.statement2);
 						return true; //stop here
 					}else {
 						return false;
@@ -72,7 +74,6 @@ public class SyntaxAnalyzer {
 		
 		//check statements
 		if(stateMent()) {
-			this.index++;
 		}else {
 			return false;
 		}
@@ -86,20 +87,30 @@ public class SyntaxAnalyzer {
 		}
 		return false;
 	}
-	public boolean stateMent() {		
+	public boolean stateMent() {
+		
 		//check expression (a:=b;)
 		if(getType(this.index)==TokenType.IDnumber.toString() ) {
-			
 			if(isExpr()) {
-				this.statement.add(this.state);
-				this.state = "";
-
+				getExp++;
 			}else {
 				return false;
 			}	
 		}
+		if(getType(this.index)==TokenType.WRITEnumber.toString() || getType(this.index)==TokenType.WRITELNumber.toString()) {
+			this.index++;
+			if(isWriteln()) {
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+		
+		}
+		
 		// stop by end.
-		if(getType(this.index+1)==TokenType.ENDnumber.toString()) {
+		if(getType(this.index)==TokenType.ENDnumber.toString()) {
 			return true;
 		}
 		this.index++;
@@ -107,26 +118,41 @@ public class SyntaxAnalyzer {
 	}
 	
 	public boolean isWriteln() {
-		if(getValue(this.index).toLowerCase().equals("write")||getValue(this.index).toLowerCase().equals("writeln")) {
+		if(getType(this.index)==TokenType.LPARENnumber.toString()) {
 			this.index++;
-			if(getType(this.index)==TokenType.LPARENnumber.toString()) {
+			if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index)) ||getType(this.index)==TokenType.CCONSTnumber.toString() ) {
+				tree.setPrintln(result.get(this.index));
 				this.index++;
-				if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index))) {
+				if(getType(this.index)==TokenType.RPARENnumber.toString()) {
 					this.index++;
-					if(getType(this.index)==TokenType.LPARENnumber.toString()) {
+					if(getType(this.index)==TokenType.SEMInumber.toString()) {
 						return true;
 					}
 				}
-				
 			}
+			else {
+				if(getType(this.index)==TokenType.RPARENnumber.toString()) {
+					this.index++;
+					if(getType(this.index)==TokenType.SEMInumber.toString()) {
+						return true;
+					}
+				}
+			}
+			
 		}
+		
 		return false;
 	}
 	public boolean isExpr() {
 
 		// check: match IDnumber and it is declared
 		if(getType(this.index)==TokenType.IDnumber.toString() && variable.contains(getValue(this.index))) {
-			this.state += getValue(this.index);
+			if(getExp == 0) {
+				this.statement1.add(getValue(this.index));
+			}else if(getExp == 1) {
+				this.statement2.add(getValue(this.index));
+			}
+			
 			this.index++;
 			
 			// if IDnumber is a integer variable
@@ -134,32 +160,56 @@ public class SyntaxAnalyzer {
 
 				//match :=
 				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
-					this.state += getValue(this.index);
+					if(getExp == 0) {
+						this.statement1.add(getValue(this.index));
+					}else if(getExp == 1) {
+						this.statement2.add(getValue(this.index));
+					}
 					this.index++;
 					// check: match IDnumber2 and it is declared
 					// or match a number
 					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
-						this.state += getValue(this.index);
+						if(getExp == 0) {
+							this.statement1.add(getValue(this.index));
+						}else if(getExp == 1) {
+							this.statement2.add(getValue(this.index));
+						}
 						this.index++;
 
 						//match ; => break
 						if(getType(this.index)==TokenType.SEMInumber.toString()) {
-							this.state += getValue(this.index);
+							if(getExp == 0) {
+								this.statement1.add(getValue(this.index));
+							}else if(getExp == 1) {
+								this.statement2.add(getValue(this.index));
+							}
 							return true;
 						}
 						// for a:= a + b;
 						//match +-*/
 						else if(getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.MINUSnumber.toString() || getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.TIMESnumber.toString() ) {
-							this.state += getValue(this.index);
+							if(getExp == 0) {
+								this.statement1.add(getValue(this.index));
+							}else if(getExp == 1) {
+								this.statement2.add(getValue(this.index));
+							}
 							this.index++;
 							//match IDnumber or number 
 							if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.ICONSTnumber.toString()) {
-								this.state += getValue(this.index);
+								if(getExp == 0) {
+									this.statement1.add(getValue(this.index));
+								}else if(getExp == 1) {
+									this.statement2.add(getValue(this.index));
+								}
 								this.index++;
 								
 								//match ; => break
 								if(getType(this.index)==TokenType.SEMInumber.toString()) {
-									this.state += getValue(this.index);
+									if(getExp == 0) {
+										this.statement1.add(getValue(this.index));
+									}else if(getExp == 1) {
+										this.statement2.add(getValue(this.index));
+									}
 									return true;
 								}
 							}
@@ -173,31 +223,55 @@ public class SyntaxAnalyzer {
 			if(variable.get(variable.size()-1).toLowerCase().equals("string")) {
 				//match :=
 				if(getType(this.index)==TokenType.COLEQnumber.toString()) {
-					this.state += getValue(this.index);
+					if(getExp == 0) {
+						this.statement1.add(getValue(this.index));
+					}else if(getExp == 1) {
+						this.statement2.add(getValue(this.index));
+					}
 					this.index++;
 					// check: match IDnumber2 and it is declared
 					// or match a number
 					if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.CCONSTnumber.toString()) {
-						this.state += getValue(this.index);
+						if(getExp == 0) {
+							this.statement1.add(getValue(this.index));
+						}else if(getExp == 1) {
+							this.statement2.add(getValue(this.index));
+						}
 						this.index++;
 						//match ; => break
 						if(getType(this.index)==TokenType.SEMInumber.toString()) {
-							this.state += getValue(this.index);
+							if(getExp == 0) {
+								this.statement1.add(getValue(this.index));
+							}else if(getExp == 1) {
+								this.statement2.add(getValue(this.index));
+							}
 							return true;
 						}
 						// for a:= a + b;
 						//match +-*/
 						else if(getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.MINUSnumber.toString() || getType(this.index)==TokenType.PLUSnumber.toString() || getType(this.index)==TokenType.TIMESnumber.toString() ) {
-							this.state += getValue(this.index);
+							if(getExp == 0) {
+								this.statement1.add(getValue(this.index));
+							}else if(getExp == 1) {
+								this.statement2.add(getValue(this.index));
+							}
 							this.index++;
 							//match IDnumber or number 
 							if((getType(this.index)==TokenType.IDnumber.toString()&&variable.contains(getValue(this.index)))||getType(this.index)==TokenType.CCONSTnumber.toString()) {
-								this.state += getValue(this.index);
+								if(getExp == 0) {
+									this.statement1.add(getValue(this.index));
+								}else if(getExp == 1) {
+									this.statement2.add(getValue(this.index));
+								}
 								this.index++;
 								
 								//match ; => break
 								if(getType(this.index)==TokenType.SEMInumber.toString()) {
-									this.state += getValue(this.index);
+									if(getExp == 0) {
+										this.statement1.add(getValue(this.index));
+									}else if(getExp == 1) {
+										this.statement2.add(getValue(this.index));
+									}
 									return true;
 								}
 							}
@@ -258,7 +332,7 @@ public class SyntaxAnalyzer {
 			
 			// program name (IDnumber)
 			if(getType(this.index)==TokenType.IDnumber.toString()) {
-				tree.setProgram(getValue(this.index)); //get program name
+				tree.setProgram(result.get(this.index)); //get program name
 				this.index ++;
 				
 				//match ; => break
